@@ -26,6 +26,12 @@ Vagrant::Config.run do |config|
     			mongodb_puppet.manifest_file  = "mongo.pp"
 		end
   	end	
+  	CONF['vm']['synced_folder'].each do |i, folder|
+	if folder['source'] != '' && folder['target'] != '' && folder['id'] != ''
+	  nfs = (folder['nfs'] == "true") ? "nfs" : nil
+	  config.vm.synced_folder "#{folder['source']}", "#{folder['target']}", id: "#{folder['id']}", type: nfs
+	end
+
 	config.vm.define :appserver do |appserver|
     	appserver.vm.box = "ubuntu_precise64"
 		appserver.vm.box_url = "http://files.vagrantup.com/precise64.box"
